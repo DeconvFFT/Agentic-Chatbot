@@ -26,12 +26,11 @@ class GraphBuilder:
         self.graph_builder.add_edge(START, 'chatbot')
         self.graph_builder.add_edge('chatbot', END)
     
-    def setup_graph(self, usecase:str):
+    def setup_graph(self, usecase: str):
         """
-        Sets up graph for selected use case
-
-        Args:
-            usecase (str): Use case
+        Sets up the graph for the selected use case.
         """
-        if usecase =='Basic Chatbot':
+        if usecase == "Basic Chatbot":
             self.basic_chatbot_build_graph()
+
+        return self.graph_builder.compile()

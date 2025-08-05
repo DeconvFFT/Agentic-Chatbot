@@ -9,7 +9,7 @@ class State(BaseModel):
     """
     Represents the structure of the state used in graph
     """
-    message:Annotated[List, add_messages] = Field(
+    messages:Annotated[List, add_messages] = Field(
         description= 'List of messages'
     )
     

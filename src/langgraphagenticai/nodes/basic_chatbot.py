@@ -1,21 +1,15 @@
 from src.langgraphagenticai.state.state import State
 
 class BasicChatbotNode:
-    """ 
-    Basic chatbot node
     """
-    def __init__(self, model):
-        self.llm = model
-        
-    def process(self, state:State) -> dict:
-        """
-        Process the input state and generates a chatbot response
+    Basic Chatbot login implementation
+    """
+    def __init__(self,model):
+        self.llm=model
 
-        Args:
-            state (dict): The input state
-
-        Returns:
-            dict: Updated state
+    def process(self,state:State)->dict:
         """
-        return {'messages': self.llm.invoke({state['messages']})}
+        Processes the input state and generates a chatbot response.
+        """
+        return {"messages":self.llm.invoke(state.model_dump()['messages'])}
     

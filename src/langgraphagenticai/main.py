@@ -25,12 +25,14 @@ def load_langgraph_agentic_ai_app():
         try:
             ## Configure LLM
             if user_input.get('selected_llm') == 'Groq':
+
                 obj_llm_config = GroqLLM(user_controls_input=user_input)
                 model = obj_llm_config.get_llm_model()
                 
             else:
                 obj_llm_config = OpenAILLM(user_controls_input=user_input)
                 model = obj_llm_config.get_llm_model()
+
             if not model:
                 st.error('❌ Error: Model could not be initialised!')
                 return
@@ -44,8 +46,9 @@ def load_langgraph_agentic_ai_app():
             graph_builder = GraphBuilder(model)
             try:
                 graph = graph_builder.setup_graph(usecase)
+                DisplayResultStreamlit(usecase, graph, user_message).display_result_on_ui()
             except Exception as e:
-                st.error(f'⚠️ Error: Graph setup failed - {e}')
+                st.error(f'❌ Error: Graph setup failed - {e}')
         except Exception as e:
-            return ValueError(f'Error occured with an exception: {e}')
+            return ValueError(f'❌ Error occured with an exception: {e}')
             
