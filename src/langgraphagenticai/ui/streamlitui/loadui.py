@@ -1,0 +1,45 @@
+import streamlit as st
+import os
+from src.langgraphagenticai.ui.uiconfigfile import Config
+
+
+class LoadStreamlitUI:
+    def __init__(self):
+        self.config = Config()
+        self.user_controls = {}
+        
+    def load_streamlit_ui(self):
+        st.set_page_config(page_title=" 🤖 "+ self.config.get_page_title(), layout='wide')
+        st.header(" 🤖 " + self.config.get_page_title())
+    
+        with st.sidebar:
+            
+            # get LLM options 
+            llm_options = self.config.get_llm_options()
+            use_case_options = self.config.get_usecase_options()
+            
+            ## LLM selection
+            self.user_controls['selected_llm'] = st.selectbox('Select an LLM', llm_options)
+            
+            ## Model selection
+            model_options = []
+            if self.user_controls['selected_llm'] == 'Groq':
+                model_options = self.config.get_groq_model_options()
+                self.user_controls['GROQ_API_KEY'] = st.session_state['GROQ_API_KEY'] = st.text_input('API key', type='password')
+                
+                ## validate api key
+                if not self.user_controls['GROQ_API_KEY']:
+                    st.warning('⚠️ Please enter your Groq API key. Don\'t have one? Create one here: https://console.groq.com/keys')
+            elif self.user_controls['selected_llm'] == 'OpenAI':
+                model_options = self.config.get_openai_model_options()
+                self.user_controls['OPENAI_API_KEY'] = st.session_state['OPENAI_API_KEY'] = st.text_input('API key', type='password')
+                ## validate api key
+                if not self.user_controls['OPENAI_API_KEY']:
+                    st.warning('⚠️ Please enter your OPENAI API key. Don\'t have one? Create one here: https://platform.openai.com/api-keys')
+            self.user_controls['selected_model'] = st.selectbox('Select a Model', model_options)
+            
+            ## select a use case
+            self.user_controls['selected_usecase'] = st.selectbox('Select a Usecase', use_case_options)
+        return self.user_controls
+    
+    
