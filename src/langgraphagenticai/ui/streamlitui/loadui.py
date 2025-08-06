@@ -25,14 +25,14 @@ class LoadStreamlitUI:
             model_options = []
             if self.user_controls['selected_llm'] == 'Groq':
                 model_options = self.config.get_groq_model_options()
-                self.user_controls['GROQ_API_KEY'] = st.session_state['GROQ_API_KEY'] = st.text_input('API key', type='password')
+                os.environ['GROQ_API_KEY'] = self.user_controls['GROQ_API_KEY'] = st.session_state['GROQ_API_KEY'] = st.text_input('API key', type='password')
                 
                 ## validate api key
                 if not self.user_controls['GROQ_API_KEY']:
                     st.warning('⚠️ Please enter your Groq API key. Don\'t have one? Create one here: https://console.groq.com/keys')
             elif self.user_controls['selected_llm'] == 'OpenAI':
                 model_options = self.config.get_openai_model_options()
-                self.user_controls['OPENAI_API_KEY'] = st.session_state['OPENAI_API_KEY'] = st.text_input('API key', type='password')
+                os.environ['OPENAI_API_KEY'] = self.user_controls['OPENAI_API_KEY'] = st.session_state['OPENAI_API_KEY'] = st.text_input('API key', type='password')
                 ## validate api key
                 if not self.user_controls['OPENAI_API_KEY']:
                     st.warning('⚠️ Please enter your OPENAI API key. Don\'t have one? Create one here: https://platform.openai.com/api-keys')
@@ -40,6 +40,14 @@ class LoadStreamlitUI:
             
             ## select a use case
             self.user_controls['selected_usecase'] = st.selectbox('Select a Usecase', use_case_options)
+            
+            ## When use clicks on Chatbot with tools
+            if self.user_controls['selected_usecase'] == 'Chatbot With Tools':
+                os.environ['TAVILY_API_KEY'] = self.user_controls['TAVILY_API_KEY'] = st.session_state['TAVILY_API_KEY'] = st.text_input('TAVILY API KEY', type='password')
+                
+                # validate api key
+                if not self.user_controls['TAVILY_API_KEY']:
+                    st.warning('⚠️ Please enter your TAVILY API KEY. Don\'t have one? Create one here: https://app.tavily.com/home')
         return self.user_controls
     
     
