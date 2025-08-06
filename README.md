@@ -1,7 +1,8 @@
 # Agentic AI chatbot
-- Basic Chatbot with a chat feature:
+- [X] Basic Chatbot with a chat feature
+- [X] Giving it ability to search web
 - Future Additions :
-    [] Giving it ability to search web
+    [] Summarizing web content
     [] Adding memory to remember context from conversations
     [] Adding ability to add files and parse them
     [] Building Knowledge base from files
