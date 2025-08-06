@@ -4,7 +4,7 @@ from src.langgraphagenticai.LLMs.groqllm import GroqLLM
 from src.langgraphagenticai.LLMs.openaillm import OpenAILLM
 from src.langgraphagenticai.graph.graph_builder import GraphBuilder
 from src.langgraphagenticai.ui.streamlitui.display_result import DisplayResultStreamlit
-
+import os
 def load_langgraph_agentic_ai_app():
     """
     Creates and loads an agentic AI app powered by Langgraph and streamlit UI.
@@ -20,7 +20,11 @@ def load_langgraph_agentic_ai_app():
     if not user_input:
         st.error('❌ Failed to load user input from UI')
         return
-    user_message = st.chat_input('Enter your message!')
+    
+    if st.session_state.isFetchButtonClicked:
+        user_message = st.session_state.timeframe
+    else:
+        user_message = st.chat_input('Enter your message!')
     if user_message:
         try:
             ## Configure LLM
@@ -45,7 +49,10 @@ def load_langgraph_agentic_ai_app():
             #Graph builder
             graph_builder = GraphBuilder(model)
             try:
+                print(f"os.environ['TAVILY_API_KEY']: {os.environ['TAVILY_API_KEY']}, os.environ['GROQ_API_KEY']: {os.environ['GROQ_API_KEY']}")
+
                 graph = graph_builder.setup_graph(usecase)
+
                 DisplayResultStreamlit(usecase, graph, user_message).display_result_on_ui()
             except Exception as e:
                 st.error(f'❌ Error: Graph setup failed - {e}')

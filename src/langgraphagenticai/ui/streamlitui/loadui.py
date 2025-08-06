@@ -11,6 +11,8 @@ class LoadStreamlitUI:
     def load_streamlit_ui(self):
         st.set_page_config(page_title=" 🤖 "+ self.config.get_page_title(), layout='wide')
         st.header(" 🤖 " + self.config.get_page_title())
+        st.session_state.timeframe = ''
+        st.session_state.isFetchButtonClicked = False
     
         with st.sidebar:
             
@@ -44,7 +46,6 @@ class LoadStreamlitUI:
             ## When use clicks on Chatbot with tools
             if self.user_controls['selected_usecase'] == 'Chatbot With Tools' or self.user_controls['selected_usecase'] == 'AI News Summary':
                 os.environ['TAVILY_API_KEY'] = self.user_controls['TAVILY_API_KEY'] = st.session_state['TAVILY_API_KEY'] = st.text_input('TAVILY API KEY', type='password')
-                
                 # validate api key
                 if not self.user_controls['TAVILY_API_KEY']:
                     st.warning('⚠️ Please enter your TAVILY API KEY. Don\'t have one? Create one here: https://app.tavily.com/home')

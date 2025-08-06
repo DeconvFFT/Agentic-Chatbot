@@ -4,6 +4,7 @@ from src.langgraphagenticai.nodes.basic_chatbot import BasicChatbotNode
 from src.langgraphagenticai.tools.tools import get_tools, create_tool_node
 from langgraph.prebuilt import tools_condition
 from src.langgraphagenticai.nodes.chatbot_with_tools import ChatbotwithTools
+from src.langgraphagenticai.nodes.ai_news_node import AINewsNode
 
 ## This workflow will get triggered once we have user inputs from UI and
 ## our LLM is loaded
@@ -27,6 +28,28 @@ class GraphBuilder:
         self.graph_builder.add_edge(START, 'chatbot')
         self.graph_builder.add_edge('chatbot', END)
     
+    def ai_news_summariser_build_graph(self):
+        
+        self.ai_news_node = AINewsNode(self.llm)
+        print( self.ai_news_node)
+        ## Build graph
+        ## add nodes
+        self.graph_builder.add_node("fetch_news", self.ai_news_node.fetch_news)
+        print('added node: fetch_news')
+        self.graph_builder.add_node('summarise_news', self.ai_news_node.summarise_news)
+        print('added node: summarise_news')
+
+        self.graph_builder.add_node('save_result', self.ai_news_node.save_results)
+        print('added node: save_results')
+
+        
+        ## add entry pt and edges
+
+        self.graph_builder.set_entry_point('fetch_news') # additonal edge
+        self.graph_builder.add_edge('fetch_news', 'summarise_news')
+        self.graph_builder.add_edge('summarise_news', 'save_result')
+        self.graph_builder.add_edge('save_result', END)
+        print(' in ai ai_news_summariser_build_graph')
     def chatbot_with_tools_build_graph(self):
         """
         Builds an advanced chatbot with tool integration.
@@ -64,4 +87,8 @@ class GraphBuilder:
             self.basic_chatbot_build_graph()
         elif usecase == 'Chatbot With Tools':
             self.chatbot_with_tools_build_graph()
+        elif usecase == 'AI News Summary':
+            print(' in ai setup_graph')
+            self.ai_news_summariser_build_graph()
+        
         return self.graph_builder.compile()
